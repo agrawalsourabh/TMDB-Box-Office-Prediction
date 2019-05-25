@@ -163,3 +163,32 @@ prod_countries = prod_countries[!duplicated(prod_countries), ]
 # write it in to csv file
 write.csv(prod_countries, file = "prod_countries.csv",row.names = FALSE)
 
+# Function to fetch production countries
+getProdCountries = function(x, colInd, rowNum){
+  prodCount = c()
+  for (i in 1:rowNum) {
+    if (x[i, colInd] != "") {
+      
+      # # m = gsub(pattern = "[A-Z][\\'][A-Z]", replacement = "",x)
+      #  m1 = gsub("\'", "\"", x[i, colInd]) # replace all (') with (")
+      
+      m = gsub(pattern = "[A-Z][\\'][A-Z]", replacement = "",x[i, colInd])
+      m1 = gsub("\'", "\"", m) # replace all (') with (")
+      # print(i)
+      mydf2 = fromJSON(m1)
+      country = ""
+      for (j in 1:nrow(mydf2)) {
+        country = paste(country, mydf2[j, 1], sep = " ")
+      }
+      prodCount = c(prodCount, country)
+    }
+    else{
+      prodCount = c(prodCount, NA)
+    }
+  }
+  return(prodCount)
+}
+prod = getProdCountries(my.data, 6, nrow(my.data))
+
+# replace prod_countries in my data with prod
+my.data$production_countries = prod
