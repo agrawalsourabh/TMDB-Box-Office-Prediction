@@ -192,3 +192,33 @@ prod = getProdCountries(my.data, 6, nrow(my.data))
 
 # replace prod_countries in my data with prod
 my.data$production_countries = prod
+
+
+
+# Original Language
+# adding a new feature in my data 'language' having three categorical values
+# 'En', 'Hi' and 'others'
+
+addLanguage = function(x, colInd){
+  lang = c()
+  
+  for (r in 1:nrow(x)) {
+    if (x[r, colInd] == 'en') {
+      lang = c(lang, 'en')
+    }
+    else if (x[r, colInd] == 'hi') {
+      lang = c(lang, 'hi')
+    }
+    else{
+      lang = c(lang, 'others')
+    }
+  }
+  return(lang)
+}
+
+movie.lang = addLanguage(x = my.data, which(colnames(my.data) == "original_language"))
+
+# adding movie.lang to our my.data
+my.data$language = movie.lang
+
+
