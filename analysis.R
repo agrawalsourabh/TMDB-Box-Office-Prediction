@@ -193,8 +193,29 @@ prod = getProdCountries(my.data, 6, nrow(my.data))
 # replace prod_countries in my data with prod
 my.data$production_countries = prod
 
+# adding a new feature number of production countries
+getNoOfCountries = function(x, colInd){
+  noOfCountries = c()
+  
+  for (i in 1:nrow(x)) {
+    if(is.na(x[i, colInd])){
+      noOfCountries = c(noOfCountries, 0)
+    }
+    else{
+      country = x[i, colInd]
+      country = strsplit(country, split = " ")
+      country_mat = matrix(unlist(country), ncol = 1, byrow = T)
+      
+      noOfCountries = c(noOfCountries, nrow(country_mat)-1)
+    }
+  }
+  
+  return(noOfCountries)
+}
 
+noOfC = getNoOfCountries(x = my.data, 6)
 
+my.data$noOfCountries = noOfC
 # Original Language
 # adding a new feature in my data 'language' having three categorical values
 # 'En', 'Hi' and 'others'
@@ -220,5 +241,50 @@ movie.lang = addLanguage(x = my.data, which(colnames(my.data) == "original_langu
 
 # adding movie.lang to our my.data
 my.data$language = movie.lang
+
+# Production Companies
+getNoOfCompanies = function(x, colInd, rowNum){
+  prodComp = c()
+  for (i in 1:rowNum) {
+    if (x[i, colInd] != "") {
+      
+      # # m = gsub(pattern = "[A-Z][\\'][A-Z]", replacement = "",x)
+      #  m1 = gsub("\'", "\"", x[i, colInd]) # replace all (') with (")
+      
+    
+      
+      m = gsub(pattern = "[A-Z][\\'][A-Z]", replacement = "",x[i, colInd])
+      
+      m = gsub("\\\\", "", m)
+      if( i== 140){
+        m = gsub("[s][\\']", "", m)
+      }
+      m1 = gsub("\'", "\"", m) # replace all (') with (")
+      print(i)
+      
+      possibleError = tryCatch(
+        {
+          mydf2 = tryCatch(fromJSON(m1))
+        }, 
+        finally = {
+         next
+        }
+      )
+      
+      if(nrow(mydf2) > 0){
+        prodComp = c(prodComp, nrow(mydf2))
+      }
+      # else
+      #   prodComp = c(prodComp, 0)
+    }
+    else{
+      prodComp = c(prodComp, 0)
+    }
+  }
+  return(prodComp)
+}
+
+noOfCompanies = getNoOfCompanies(x = my.data, colInd = which(colnames(my.data) == "production_companies"), 
+                                 rowNum = nrow(my.data))
 
 
