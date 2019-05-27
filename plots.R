@@ -94,3 +94,15 @@ ggplot(data = my.data[my.data$data.from == 'train', ],
   scale_y_continuous(labels = dollar)
 
 ggsave("Plots/RuntimeVsRevenue.png")
+
+# Plot a scatter graph between noOfCountries and revenue
+ggplot(data = my.data[my.data$data.from == 'train', ], 
+       mapping = aes(x = noOfCountries, y = revenue)) +
+  geom_point(col = "#f44e42")+
+  geom_smooth(method = "lm", se = F) +
+  ggtitle("Revenue Vs noOfCountries") +
+  xlab("noOfCountries") +
+  ylab("Revenue") +
+  scale_y_continuous(labels = dollar)
+
+ggsave("Plots/noOfCountries Vs Revenue.png")
