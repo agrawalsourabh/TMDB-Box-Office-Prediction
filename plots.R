@@ -106,3 +106,136 @@ ggplot(data = my.data[my.data$data.from == 'train', ],
   scale_y_continuous(labels = dollar)
 
 ggsave("Plots/noOfCountries Vs Revenue.png")
+
+# Plot a scatter plot between noOfCompany and revenue
+ggplot(data = my.data[my.data$data.from == 'train', ], 
+       mapping = aes(x = noOfCompany, y = revenue)) +
+  geom_point(col = "#426bf4")+
+  geom_smooth(method = "lm", se = F) +
+  ggtitle("Revenue Vs noOfCompany") +
+  xlab("noOfCompany") +
+  ylab("Revenue") +
+  scale_y_continuous(labels = dollar)
+
+ggsave("Plots/noOfCompany Vs Revenue.png")
+
+# Plot a scatter plot between cast_count and revenue
+ggplot(data = my.data[my.data$data.from == 'train', ], 
+       mapping = aes(x = cast_count, y = revenue)) +
+  geom_point(col = "#f48042")+
+  geom_smooth(method = "lm", se = F) +
+  ggtitle("Revenue Vs cast_count") +
+  xlab("cast_count") +
+  ylab("Revenue") +
+  scale_y_continuous(labels = dollar)
+
+ggsave("Plots/cast_count Vs Revenue.png")
+
+# Plot a scatter plot between male_cast and revenue
+ggplot(data = my.data[my.data$data.from == 'train', ], 
+       mapping = aes(x = male_cast, y = revenue)) +
+  geom_point(col = "#9dd82f")+
+  geom_smooth(method = "lm", se = F) +
+  ggtitle("Revenue Vs male_cast") +
+  xlab("male_cast") +
+  ylab("Revenue") +
+  scale_y_continuous(labels = dollar)
+
+ggsave("Plots/male_cast Vs Revenue.png")
+
+# Plot a scatter plot between female_cast and revenue
+ggplot(data = my.data[my.data$data.from == 'train', ], 
+       mapping = aes(x = female_cast, y = revenue)) +
+  geom_point(col = "#590c20")+
+  geom_smooth(method = "lm", se = F) +
+  ggtitle("Revenue Vs female_cast") +
+  xlab("female_cast") +
+  ylab("Revenue") +
+  scale_y_continuous(labels = dollar)
+
+ggsave("Plots/female_cast Vs Revenue.png")
+
+# ------------------crew--------------------------
+
+# Plot a scatter plot between cast_count and revenue
+ggplot(data = my.data[my.data$data.from == 'train', ], 
+       mapping = aes(x = crew_count, y = revenue)) +
+  geom_point(col = "#f48042")+
+  geom_smooth(method = "lm", se = F) +
+  ggtitle("Revenue Vs crew_count") +
+  xlab("crew_count") +
+  ylab("Revenue") +
+  scale_y_continuous(labels = dollar)
+
+ggsave("Plots/crew_count Vs Revenue.png")
+
+# Plot a scatter plot between male_crew and revenue
+ggplot(data = my.data[my.data$data.from == 'train', ], 
+       mapping = aes(x = male_crew, y = revenue)) +
+  geom_point(col = "#9dd82f")+
+  geom_smooth(method = "lm", se = F) +
+  ggtitle("Revenue Vs male_crew") +
+  xlab("male_crew") +
+  ylab("Revenue") +
+  scale_y_continuous(labels = dollar)
+
+ggsave("Plots/male_crew Vs Revenue.png")
+
+# Plot a scatter plot between female_crew and revenue
+ggplot(data = my.data[my.data$data.from == 'train', ], 
+       mapping = aes(x = female_crew, y = revenue)) +
+  geom_point(col = "#590c20")+
+  geom_smooth(method = "lm", se = F) +
+  ggtitle("Revenue Vs female_crew") +
+  xlab("female_crew") +
+  ylab("Revenue") +
+  scale_y_continuous(labels = dollar)
+
+ggsave("Plots/female_crew Vs Revenue.png")
+
+#----------------------Release date-----------------------------
+# Plot a scatter plot between release year and revenue
+ggplot(data = my.data[my.data$data.from == 'train', ], 
+       mapping = aes(x = year, y = revenue)) +
+  geom_point(col = "#590c20")+
+  geom_smooth(method = "lm", se = F) +
+  ggtitle("Revenue Vs year") +
+  xlab("year") +
+  ylab("Revenue") +
+  scale_y_continuous(labels = dollar)
+
+ggsave("Plots/year Vs Revenue.png")
+
+# Plot a bar graph between release day and revenue
+ggplot(data = my.data[my.data$data.from == 'train', ], 
+       mapping = aes(x = week_day, y = revenue, fill = week_day)) +
+  stat_summary_bin(fun.y = "sum", geom = "bar", position = position_stack(reverse = T))+
+  coord_flip() +
+  ggtitle("Revenue Vs Day") +
+  xlab("Day") +
+  ylab("Revenue") +
+  scale_y_continuous(labels = dollar)
+
+ggsave("Plots/Day Vs Revenue.png")
+
+# Plot a bar graph between release month and revenue
+ggplot(data = my.data[my.data$data.from == 'train', ], 
+       mapping = aes(x = month, y = revenue, fill = month)) +
+  stat_summary_bin(fun.y = "sum", geom = "bar", position = position_stack(reverse = T))+
+  coord_flip() +
+  ggtitle("Revenue Vs Month") +
+  xlab("Month") +
+  ylab("Revenue") +
+  scale_y_continuous(labels = dollar)
+
+ggsave("Plots/Month Vs Revenue.png")
+
+# Plot a bar graph for missing value
+ggplot(data = missing_val, mapping = aes(x = reorder(na_varname, na_per), y = na_per, fill = na_varname)) +
+  geom_bar(stat = "identity", position = position_stack(reverse = T)) +
+  coord_flip() +
+  ggtitle("Missing value") +
+  xlab("Features") +
+  ylab("Missing %") 
+
+ggsave("Plots/MissingValues.png")
