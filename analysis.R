@@ -6,12 +6,15 @@ install.packages("dbplyr")
 # install.packages("tidyverse", dependencies = TRUE)
 install.packages("jsonlite")
 install.packages("tidyjson")
+install.packages("lubridate") # working with dates
 
 # loading packages
 library(stringi)
+library(stringr)
 # library(dplyr)
 # library(tidyverse)
 library(jsonlite)
+library(lubridate)
 
 
 # importing data
@@ -213,7 +216,7 @@ getNoOfCountries = function(x, colInd){
   return(noOfCountries)
 }
 
-noOfC = getNoOfCountries(x = my.data, 6)
+noOfC = getNoOfCountries(x = my.data, colInd = which(colnames(my.data) == "production_countries"))
 
 my.data$noOfCountries = noOfC
 # Original Language
@@ -244,47 +247,69 @@ my.data$language = movie.lang
 
 # Production Companies
 getNoOfCompanies = function(x, colInd, rowNum){
-  prodComp = c()
-  for (i in 1:rowNum) {
-    if (x[i, colInd] != "") {
-      
-      # # m = gsub(pattern = "[A-Z][\\'][A-Z]", replacement = "",x)
-      #  m1 = gsub("\'", "\"", x[i, colInd]) # replace all (') with (")
-      
-    
-      
-      m = gsub(pattern = "[A-Z][\\'][A-Z]", replacement = "",x[i, colInd])
-      
-      m = gsub("\\\\", "", m)
-      if( i== 140){
-        m = gsub("[s][\\']", "", m)
-      }
-      m1 = gsub("\'", "\"", m) # replace all (') with (")
-      print(i)
-      
-      possibleError = tryCatch(
-        {
-          mydf2 = tryCatch(fromJSON(m1))
-        }, 
-        finally = {
-         next
-        }
-      )
-      
-      if(nrow(mydf2) > 0){
-        prodComp = c(prodComp, nrow(mydf2))
-      }
-      # else
-      #   prodComp = c(prodComp, 0)
-    }
-    else{
-      prodComp = c(prodComp, 0)
-    }
+  noOfComp = c()
+  
+  for (i in 1:nrow(x)) {
+    print(i)
+    prod_comp = x[i, colInd]
+    count = str_count(prod_comp, "name")
+    noOfComp = c(noOfComp, count)
   }
-  return(prodComp)
+  
+  return(noOfComp)
 }
 
 noOfCompanies = getNoOfCompanies(x = my.data, colInd = which(colnames(my.data) == "production_companies"), 
                                  rowNum = nrow(my.data))
 
+# add a new feature noOfCompany to my data
+my.data$noOfCompany = noOfCompanies
 
+# ----------------------cast---------------------------------
+# count the no of cast
+cast_count = str_count(my.data$cast, "name")
+
+# add a feature called cast_count to my data
+my.data$cast_count = cast_count
+
+# count the no of female cast
+female_cast = str_count(my.data$cast, "gender\': 1")
+
+# add female_cast to my data
+my.data$female_cast = female_cast
+
+# count the no of male cast
+male_cast = str_count(my.data$cast, "gender\': 2")
+
+# add male_cast to my data
+my.data$male_cast = male_cast
+
+# ----------------------crew---------------------------------
+# count the no of crew
+crew_count = str_count(my.data$crew, "name")
+
+# add a feature called cast_count to my data
+my.data$crew_count = crew_count
+
+# count the no of female cast
+female_crew = str_count(my.data$crew, "gender\': 1")
+
+# add female_cast to my data
+my.data$female_crew = female_crew
+
+# count the no of male cast
+male_crew = str_count(my.data$crew, "gender\': 2")
+
+# add male_cast to my data
+my.data$male_crew = male_crewD  
+
+# --------------------------- Release Date -------------------------  
+r_date = parse_date_time2(my.data$release_date, "mdy", cutoff_2000 = 20)
+week_day = wday(r_date, label = T)
+mon = month(r_date, label = T)
+yr = year(r_date)
+
+# add new features week_day, month and year
+my.data$week_day = week_day
+my.data$month = mon
+my.data$year = yr
